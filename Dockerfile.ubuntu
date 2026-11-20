@@ -1,0 +1,30 @@
+ARG UBUNTU_VERSION=24.04
+FROM ubuntu:${UBUNTU_VERSION}
+
+ARG SOURCE_VERSION=0.1.1
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        python3-venv \
+        ca-certificates \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/StaticJinjaPlus
+
+RUN curl -fsSL "https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/${SOURCE_VERSION}.tar.gz" \
+    -o /tmp/source.tar.gz \
+    && tar -xzf /tmp/source.tar.gz --strip-components=1 -C /opt/StaticJinjaPlus \
+    && rm /tmp/source.tar.gz \
+    && python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python", "main.py", "--srcpath", "templates_example"]
