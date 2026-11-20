@@ -1,74 +1,76 @@
-
 # StaticJinjaPlus Docker Port
 
 Docker images for [StaticJinjaPlus](https://github.com/MrDave/StaticJinjaPlus).
 
 This repository contains Dockerfiles for building StaticJinjaPlus images using different base images.
 
-The source code of StaticJinjaPlus is downloaded directly from the original GitHub repository during the image build.
+The source code is downloaded directly from the original GitHub repository during the image build. The port does not contain a copy of the upstream source code.
 
 ## Available Dockerfiles
 
-- `Dockerfile.ubuntu` — based on Ubuntu 24.04.
-- `Dockerfile.python-slim` — based on Python Slim (Debian Bookworm).
+- `Dockerfile.ubuntu` — based on Ubuntu 24.04 LTS.
+- `Dockerfile.python-slim` — based on the official Python Slim image.
+
+## Choosing the StaticJinjaPlus version
+
+Both Dockerfiles support the `SOURCE_REF` build argument.
+
+To build a tagged release, use:
+
+```bash
+--build-arg SOURCE_REF=refs/tags/0.1.1
+```
+
+To build the latest code from the main branch, use:
+
+```bash
+--build-arg SOURCE_REF=refs/heads/main
+```
 
 ## Build with Ubuntu
 
-Build an image using StaticJinjaPlus version 0.1.1:
+Build from release 0.1.1:
 
 ```bash
-docker build \
-  -f Dockerfile.ubuntu \
-  -t static-jinja-plus:0.1.1-ubuntu \
-  --build-arg SOURCE_VERSION=0.1.1 \
-  .
+docker build -f Dockerfile.ubuntu \
+  -t static-jinja-plus:ubuntu-0.1.1 \
+  --build-arg SOURCE_REF=refs/tags/0.1.1 .
 ```
 
-Run the container:
+Build from main:
 
 ```bash
-docker run --rm static-jinja-plus:0.1.1-ubuntu
+docker build -f Dockerfile.ubuntu \
+  -t static-jinja-plus:ubuntu-main \
+  --build-arg SOURCE_REF=refs/heads/main .
 ```
 
 ## Build with Python Slim
 
-Build an image using StaticJinjaPlus version 0.1.1:
+The Python version can be selected with the `PYTHON_VERSION` build argument.
+
+Build with Python 3.15 from release 0.1.1:
 
 ```bash
-docker build \
-  -f Dockerfile.python-slim \
-  -t static-jinja-plus:0.1.1-slim \
-  --build-arg SOURCE_VERSION=0.1.1 \
-  .
+docker build -f Dockerfile.python-slim \
+  -t static-jinja-plus:python315-0.1.1 \
+  --build-arg PYTHON_VERSION=3.15 \
+  --build-arg SOURCE_REF=refs/tags/0.1.1 .
 ```
 
-Run the container:
+Build with Python 3.15 from main:
 
 ```bash
-docker run --rm static-jinja-plus:0.1.1-slim
+docker build -f Dockerfile.python-slim \
+  -t static-jinja-plus:python315-main \
+  --build-arg PYTHON_VERSION=3.15 \
+  --build-arg SOURCE_REF=refs/heads/main .
 ```
 
-## Choosing StaticJinjaPlus version
+## Run a container
 
-The `SOURCE_VERSION` build argument specifies the version tag of StaticJinjaPlus to download from GitHub.
-
-For example, to build version 0.1.0, replace:
+For example:
 
 ```bash
---build-arg SOURCE_VERSION=0.1.1
+docker run --rm static-jinja-plus:ubuntu-0.1.1
 ```
-
-with:
-
-```bash
---build-arg SOURCE_VERSION=0.1.0
-```
-
-The same argument works with both Dockerfiles.
-
-## Choosing a base image
-
-Select the required base image by choosing the corresponding Dockerfile:
-
-- `Dockerfile.ubuntu` for Ubuntu.
-- `Dockerfile.python-slim` for Python Slim.

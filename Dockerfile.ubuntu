@@ -1,7 +1,7 @@
 ARG UBUNTU_VERSION=24.04
 FROM ubuntu:${UBUNTU_VERSION}
 
-ARG SOURCE_VERSION=0.1.1
+ARG SOURCE_REF=refs/tags/0.1.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,7 +16,7 @@ RUN apt-get update \
 
 WORKDIR /opt/StaticJinjaPlus
 
-RUN curl -fsSL "https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/${SOURCE_VERSION}.tar.gz" \
+RUN curl -fsSL "https://github.com/MrDave/StaticJinjaPlus/archive/${SOURCE_REF}.tar.gz" \
     -o /tmp/source.tar.gz \
     && tar -xzf /tmp/source.tar.gz --strip-components=1 -C /opt/StaticJinjaPlus \
     && rm /tmp/source.tar.gz \

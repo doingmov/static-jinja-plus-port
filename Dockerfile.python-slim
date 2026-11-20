@@ -1,7 +1,7 @@
-ARG PYTHON_VERSION=3.10
-FROM python:${PYTHON_VERSION}-slim-bookworm
+ARG PYTHON_VERSION=3.15
+FROM python:${PYTHON_VERSION}-slim
 
-ARG SOURCE_VERSION=0.1.1
+ARG SOURCE_REF=refs/tags/0.1.1
 
 WORKDIR /opt/StaticJinjaPlus
 
@@ -11,7 +11,7 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL "https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/${SOURCE_VERSION}.tar.gz" \
+RUN curl -fsSL "https://github.com/MrDave/StaticJinjaPlus/archive/${SOURCE_REF}.tar.gz" \
     -o /tmp/source.tar.gz \
     && tar -xzf /tmp/source.tar.gz --strip-components=1 -C /opt/StaticJinjaPlus \
     && rm /tmp/source.tar.gz \
